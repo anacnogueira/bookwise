@@ -2,7 +2,7 @@ services:
   # Serviço do PHP
   app:
     image: php:8.5-fpm-alpine
-    container_name: php-app-2
+    container_name: bookwise
     volumes:
       - ./src:/var/www/html
     restart: unless-stopped
@@ -10,7 +10,7 @@ services:
   # Serviço do Nginx
   web:
     image: nginx:alpine
-    container_name: nginx-server-2
+    container_name: nginx-server-bookwise
     ports:
       - "80:80"
     volumes:
