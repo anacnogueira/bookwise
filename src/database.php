@@ -2,26 +2,36 @@
 
 class DB
 {
-    public function livros()
+    private $db;
+
+    public function __construct()
     {
-        $db = new PDO("sqlite:database.sqlite");
-        $query = $db->query("SELECT * FROM livros");
 
-        $items =  $query->fetchAll();
+        $this->db = new PDO('sqlite:database.sqlite');
+    }
 
-        $retorno = [];
+    public function livros($pesquisa = null)
+    {
+        /*$sql = "SELECT * FROM livros";
+        if ($pesquisa) {
+            $sql .= " WHERE titulo LIKE '%{$pesquisa}%' OR autor LIKE '%{$pesquisa}%' OR descricao LIKE '%{$pesquisa}%'";
+        }*/
 
-         foreach($items as $item) {         
-            $livro = new Livro;
-            $livro->id = $item['id'];
-            $livro->titulo = $item['titulo'];
-            $livro->autor = $item['autor'];
-            $livro->descricao = $item['descricao'];
+        $prepare = $this->db->prepare("SELECT * FROM livros WHERE usuario_id = 1 AND titulo LIKE :pesquisa");
+        $prepare->bindValue("pesquisa", "%$pesquisa%");        
+        $prepare->setFetchMode(PDO::FETCH_CLASS, Livro::class);
+        $prepare->execute();
 
-            $retorno [] = $livro;
+        return $prepare->fetchAll();
+    }
 
-        }
+    public function livro($id)
+    {
+        $prepare = $this->db->prepare("select * from livros WHERE usuario_id = 1 AND  id = :id");
+        $prepare->bindParam("id", $id);
+        $prepare->setFetchMode(PDO::FETCH_CLASS, Livro::class);
+        $prepare->execute();
 
-        return $retorno;
+        return $prepare->fetch();
     }
 }
