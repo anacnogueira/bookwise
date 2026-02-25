@@ -2,7 +2,7 @@
 
 $id = $_REQUEST['id'];
 
-$livro = (new DB)->query(
+$livro = $DB->query(
     query: "select * from livros WHERE usuario_id = 1 AND  id = :id",
     class: Livro::class,
     params: ['id' => $id]  
