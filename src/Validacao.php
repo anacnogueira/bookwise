@@ -2,7 +2,7 @@
 
 class Validacao
  {
-    public $validacoes;
+    public $validacoes = [];
 
     public static function validar($regras, $dados)
     {
@@ -14,6 +14,11 @@ class Validacao
 
                 if ($regra == 'confirmed') {
                     $validacao->$regra($campo, $valorDoCampo, $dados["{$campo}_confirmacao"]);
+                } else if (str_contains($regra, ':')) {
+                    $temp = explode(':', $regra);
+                    $regra = $temp[0];
+                    $regraAr = $temp[1];
+                    $validacao->$regra($regraAr, $campo, $valorDoCampo);
                 } else {
                     $validacao->$regra($campo, $valorDoCampo);
                 }
@@ -24,32 +29,57 @@ class Validacao
         return $validacao;
     }
 
-    private function required($campo)
+    private function required($campo, $valor)
     {
-        if (!$campo) {
+        if (!$valor) {
             $this->validacoes[] = "O $campo é obrigatório.";
         }      
     }
 
-    private function email($campo)
+    private function email($campo, $valor)
     {
 
-        if (!filter_var($campo, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($valor, FILTER_VALIDATE_EMAIL)) {
             $this->validacoes[] = "O $campo é inválido";
         }
     }
 
-    private function confirmed($campo, $campoDeConfirmacao)
+    private function confirmed($campo, $valor, $valorDeConfirmacao)
     {
-        if ($campoDeConfirmacao != $campo) {
+        if ($valorDeConfirmacao != $valor) {
             $this->validacoes[] = "O $campo de confirmação não confere";
         }
     }
 
     public function naoPassou()
     {
-
         return sizeof($this->validacoes) > 0;
+    }
+
+    private function min($min, $campo, $valor)
+    {
+
+        if (strlen($valor) <= $min) {
+            $this->validacoes[] = "O $campo precisa ter um mínimo de $min caracteres.";
+
+        }
+
+    }
+
+    private function max($max, $campo, $valor)
+    {
+
+        if (strlen($valor) > $max) {
+            $this->validacoes[] = "O $campo precisa ter um máximo de $max caracteres.";
+        }
+
+    }
+
+    private function strong($campo, $valor)
+    {
+        if (! strpbrk($valor, "!#$%&'()*+,-./:;<=>?@[\]^_`{|}~")) {
+            $this->validacoes[] = "A $campo precisa um caractere especial nela.";    
+        }
 
     }
  }
