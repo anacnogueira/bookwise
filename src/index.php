@@ -1,13 +1,15 @@
 <?php
+require "models/Livro.php";
+require "models/Usuario.php";
 
 session_start();
 
+require "functions.php";
+
+require "Validacao.php";
+
 $config = require('config.php');
 
-require "models/Livro.php";
-
 require "Database.php";
-
-require "functions.php";
 
 require "routes.php";
