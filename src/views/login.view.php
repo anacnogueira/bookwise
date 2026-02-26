@@ -9,7 +9,7 @@
 
             <div class="flex flex-col"> 
                 <label class="text-stone-400 mb-1">Senha</label>
-                <input type="password" name="password"  class="border-stone-800 border-2 rounded-md bg-stone-900 text-sm focus:outline-none px-2 py-1 w-full">
+                <input type="password" name="senha"  class="border-stone-800 border-2 rounded-md bg-stone-900 text-sm focus:outline-none px-2 py-1 w-full">
             </div>
 
             <button type="submit" class="border-stone-800 bg-stone-900 text-stone-400 px-4 py-1 rounded-md border-2 hover:bg-stone-700">Logar</button>
