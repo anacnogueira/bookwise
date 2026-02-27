@@ -80,6 +80,23 @@ class Validacao
         if (! strpbrk($valor, "!#$%&'()*+,-./:;<=>?@[\]^_`{|}~")) {
             $this->validacoes[] = "A $campo precisa um caractere especial nela.";    
         }
+    }
 
+    private function unique($tabela, $campo, $valor)
+    {
+        if (!$valor) {
+            return;
+        }
+
+         $db = new Database(config('database'));
+
+        $resultado = $db->query(
+            query: "select * from $tabela where $campo = :valor",
+            params: ['valor' => $valor]
+        )->fetch();
+
+        if ($resultado) {
+            $this->validacoes[] = "O $campo já está sendo usado.";
+        }
     }
  }

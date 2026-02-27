@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: /");
         exit();
     } else {
-        flash()->push('mensagem_login', 'Usuário não encontrado');
+        flash()->push('mensagem_login', 'Credenciais Inválidas!');
         header("Location: /login");
         exit();
     }
