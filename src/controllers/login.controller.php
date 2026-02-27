@@ -1,9 +1,19 @@
 <?php
-$mensagem = $_REQUEST["mensagem"] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $senha = $_POST['senha'];
+
+    $validacao = Validacao::validar([
+        'email' => ['required', 'email'],
+        'senha' => ['required'],
+    ], $_POST);
+
+    if ($validacao->naoPassou()) {
+        flash()->push('validacoes_login', $validacao->validacoes);
+        header("Location: /login");
+        exit();
+    }
 
     $usuario = $DB->query(
         query: "select * from usuarios where email=:email AND senha=:senha",
@@ -13,10 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($usuario) {
         $_SESSION['auth'] = $usuario;
-        $_SESSION['mensagem'] = "Seja bem-vindo " . $usuario->nome . "!";
+        flash()->push('mensagem', "Seja bem-vindo " . $usuario->nome . "!");
         header("Location: /");
         exit();
+    } else {
+        flash()->push('mensagem_login', 'Usuário não encontrado');
+        header("Location: /login");
+        exit();
     }
-}
+}    
 
-view('login', compact('mensagem'));
+view('login');

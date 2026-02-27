@@ -15,11 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ], $_POST);
 
     if ($validacao->naoPassou()) {
-        $_SESSION['validacoes'] = $validacao->validacoes;
+        flash()->push('validacoes_registrar', $validacao->validacoes);
         header("Location: /login");
         exit();
     }
-    
+
     $resultado = $DB->query(
         query: "insert into usuarios (nome, email, senha) values (:nome, :email, :senha)",
         params: [
@@ -29,7 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ]
     );
 
-    header('location: /login?mensagem=Registrado com sucesso!');
+    flash()->push('mensagem', 'Usuário registrado com sucesso');
+
+    header('location: /login');
 
     exit();
 };
