@@ -32,7 +32,7 @@ $dir = "images/";
 $novo_nome = str_replace(" ", "-", strtolower($titulo));
 $extensao = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
 $imagem = "$dir$novo_nome.$extensao";
-move_uploaded_file($_FILES['imagem']['tmp_name'], $imagem);
+move_uploaded_file($_FILES['imagem']['tmp_name'], __DIR__ .  "/../public/$imagem");
 
 $resultado = $DB->query(
     query: "insert into livros (titulo, autor, descricao, ano_lancamento, usuario_id, imagem) 
