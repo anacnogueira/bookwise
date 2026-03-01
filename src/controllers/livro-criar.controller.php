@@ -1,0 +1,39 @@
+<?php
+
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    header("location: /meus-livros");
+    exit();
+}
+
+if (!auth()) {
+    abort(403);
+}
+
+$titulo             = $_POST['titulo'];
+$autor              = $_POST['autor'];
+$descricao          = $_POST['descricao'];
+$ano_lancamento     = $_POST['ano_lancamento'];
+$usuario_id         = auth()->id;
+
+$validacao = Validacao::validar([
+    'titulo' => ['required', 'min: 3'],
+    'autor' => ['required'],
+    'descricao' => ['required'],
+    'ano_lancamento' => ['required'],
+], $_POST);
+
+if ($validacao->naoPassou()) {
+    flash()->push('validacoes', $validacao->validacoes);
+    header("Location: /meus-livros");
+    exit();
+}
+
+$resultado = $DB->query(
+    query: "insert into livros (titulo, autor, descricao, ano_lancamento, usuario_id) 
+    values (:titulo, :autor, :descricao, :ano_lancamento, :usuario_id)",
+    params: compact('titulo', 'autor', 'descricao', 'ano_lancamento', 'usuario_id')
+ );
+
+flash()->push('mensagem', 'Livro cadastrado com sucesso');
+header('location: /meus-livros');
+exit();

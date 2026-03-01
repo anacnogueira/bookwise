@@ -7,4 +7,6 @@ class Livro
     public $descricao;
     public $ano_lancamento;
     public $usuario_id;
+    public $count_avaliacoes;
+    public $nota_avaliacao;
 }
