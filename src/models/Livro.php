@@ -9,6 +9,7 @@ class Livro
     public $usuario_id;
     public $count_avaliacoes;
     public $nota_avaliacao;
+    public $imagem;
 
     private function query($where, $params)
     {
@@ -20,6 +21,7 @@ class Livro
                 livro.autor,
                 livro.descricao,
                 livro.ano_lancamento,
+                livro.imagem,
                 count(avaliacao.id) as count_avaliacoes,
                 round(sum(avaliacao.nota) /  count(avaliacao.id)) as nota_avaliacao
                 FROM
