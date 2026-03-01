@@ -4,10 +4,7 @@ if (!auth()) {
     exit();
 }
 $usuario_id = auth()->id;
-$livros = $DB->query(
-    query: "SELECT * FROM livros where usuario_id = :usuario_id",    
-    class: Livro::class,
-    params: ['usuario_id' => $usuario_id]
-)->fetchAll();
+
+$livros = Livro::getByUserId($usuario_id);
 
 view('meus-livros', compact("livros"));
